@@ -17,5 +17,32 @@ services:
       timeout: 5s
       retries: 10
 
+  backend:
+    build:
+      context: ./server
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: birthday
+      PGPASSWORD: birthday
+      PGDATABASE: thebirthdates
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./client
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_TARGET: http://backend:4000
+    depends_on:
+      - backend
+
 volumes:
   thebirthdates-data:
